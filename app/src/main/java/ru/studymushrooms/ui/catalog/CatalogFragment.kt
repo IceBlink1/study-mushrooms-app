@@ -13,14 +13,12 @@ import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.GroupieViewHolder
 import ru.studymushrooms.MainActivity
 import ru.studymushrooms.R
-import ru.studymushrooms.ui.auth.LoginViewModel
 import java.util.*
 import kotlin.collections.ArrayList
 
 
 class CatalogFragment : Fragment() {
 
-    private val loginViewModel: LoginViewModel by activityViewModels()
     private val catalogViewModel: CatalogViewModel by activityViewModels()
     private val items: ArrayList<CatalogItem> = ArrayList()
     private lateinit var catalogRecyclerView: RecyclerView
@@ -38,34 +36,22 @@ class CatalogFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val navController = findNavController()
-        loginViewModel.authenticationState.observe(
-            viewLifecycleOwner,
-            Observer { authenticationState ->
-                when (authenticationState) {
-                    LoginViewModel.AuthenticationState.AUTHENTICATED -> {
-                        (activity as MainActivity).showBottomNav()
-                        catalogViewModel.loadData(requireContext())
-                        adapter = GroupAdapter()
-                        catalogViewModel.mushrooms.observe(viewLifecycleOwner, Observer {
-                            if (catalogViewModel.mushrooms.value != null) {
-                                for (i in catalogViewModel.mushrooms.value!!) {
-                                    items.add(CatalogItem(i))
-                                }
-                                adapter.addAll(items)
-                                catalogRecyclerView = view.findViewById(R.id.catalog_recyclerview)
-                                catalogRecyclerView.adapter = adapter
-                                catalogRecyclerView.layoutManager = GridLayoutManager(context, 2)
-                            }
-                        })
-                    }
-                    else -> {
-                        (activity as MainActivity).hideBottomNav()
-                        navController.navigate(R.id.navigate_to_login_fragment)
-                    }
+
+        (activity as MainActivity).showBottomNav()
+        adapter = GroupAdapter()
+        catalogViewModel.mushrooms.observe(viewLifecycleOwner, Observer {
+            if (catalogViewModel.mushrooms.value != null) {
+                for (i in catalogViewModel.mushrooms.value!!) {
+                    items.add(CatalogItem(i))
                 }
-            })
+                adapter.addAll(items)
+                catalogRecyclerView = view.findViewById(R.id.catalog_recyclerview)
+                catalogRecyclerView.adapter = adapter
+                catalogRecyclerView.layoutManager = GridLayoutManager(context, 2)
+            }
+        })
 
-
+        catalogViewModel.loadData(requireContext())
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -82,7 +68,7 @@ class CatalogFragment : Fragment() {
             override fun onQueryTextSubmit(query: String?): Boolean {
                 if (query != null)
                     adapter.updateAsync(items.filter {
-                        it.mushroom.name.toLowerCase(Locale.getDefault())
+                        it.mushroom.name!!.toLowerCase(Locale.getDefault())
                             .contains(query.toLowerCase(Locale.getDefault()))
                     }, true, null)
                 else
@@ -93,7 +79,7 @@ class CatalogFragment : Fragment() {
             override fun onQueryTextChange(newText: String?): Boolean {
                 if (newText != null)
                     adapter.updateAsync(items.filter {
-                        it.mushroom.name.toLowerCase(Locale.getDefault())
+                        it.mushroom.name!!.toLowerCase(Locale.getDefault())
                             .contains(newText.toLowerCase(Locale.getDefault()))
                     }, true, null)
                 else

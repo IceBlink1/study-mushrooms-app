@@ -4,9 +4,9 @@ import android.widget.TextView
 import com.xwray.groupie.GroupieViewHolder
 import com.xwray.groupie.Item
 import ru.studymushrooms.R
-import ru.studymushrooms.api.NoteModel
+import ru.studymushrooms.db.Note
 
-class NoteItem(val noteModel: NoteModel) : Item<GroupieViewHolder>() {
+class NoteItem(val noteModel: Note) : Item<GroupieViewHolder>() {
     override fun getLayout(): Int = R.layout.note_item
 
     override fun bind(viewHolder: GroupieViewHolder, position: Int) {

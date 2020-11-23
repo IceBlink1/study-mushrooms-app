@@ -8,10 +8,10 @@ import com.squareup.picasso.Picasso
 import com.xwray.groupie.kotlinandroidextensions.GroupieViewHolder
 import com.xwray.groupie.kotlinandroidextensions.Item
 import ru.studymushrooms.R
-import ru.studymushrooms.api.MushroomModel
+import ru.studymushrooms.db.Mushroom
 import ru.studymushrooms.ui.activities.MushroomActivity
 
-class CatalogItem(val mushroom: MushroomModel) : Item() {
+class CatalogItem(val mushroom: Mushroom) : Item() {
     val typeToRusType: Map<String, String> =
         mapOf("edible" to "Съедобный", "halfedible" to "Полусъедобный", "inedible" to "Несъедобный")
 
@@ -23,15 +23,18 @@ class CatalogItem(val mushroom: MushroomModel) : Item() {
         val primaryEditText = viewHolder.itemView.findViewById<TextView>(R.id.card_primary)
         primaryEditText.text = typeToRusType[mushroom.type]
         val secondaryEditText = viewHolder.itemView.findViewById<TextView>(R.id.card_secondary)
-        if (mushroom.description.length > 30)
-            secondaryEditText.text = mushroom.description.substring(0..30) + "..."
+        if (mushroom.description?.length ?: 0 > 30)
+            secondaryEditText.text = mushroom.description?.substring(0..30) + "..."
         else
             secondaryEditText.text = mushroom.description
-        if (mushroom.pictureLink.startsWith("/image"))
-            mushroom.pictureLink = "https://wikigrib.ru" + mushroom.pictureLink
-        val image = viewHolder.itemView.findViewById<ImageView>(R.id.card_image)
-        Picasso.get().load(mushroom.pictureLink).into(image)
-
+        val link = mushroom.pictureLink
+        link?.let {
+            val image = viewHolder.itemView.findViewById<ImageView>(R.id.card_image)
+            if (it.startsWith("/image"))
+                Picasso.get().load("https://wikigrib.ru" + it).into(image)
+            else
+                Picasso.get().load(it).into(image)
+        }
         val card = viewHolder.itemView.findViewById<MaterialCardView>(R.id.card)
         card.setOnClickListener {
             val intent = Intent(it.context, MushroomActivity::class.java)

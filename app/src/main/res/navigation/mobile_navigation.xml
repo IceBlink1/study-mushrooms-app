@@ -10,9 +10,6 @@
         android:name="ru.studymushrooms.ui.catalog.CatalogFragment"
         android:label="@string/catalog"
         tools:layout="@layout/fragment_catalog">
-        <action
-            android:id="@+id/navigate_to_login_fragment"
-            app:destination="@id/navigation_login" />
     </fragment>
 
     <fragment
@@ -26,11 +23,6 @@
         android:name="ru.studymushrooms.ui.maps.MapsFragment"
         android:label="@string/map"
         tools:layout="@layout/fragment_maps" />
-    <fragment
-        android:id="@+id/navigation_login"
-        android:name="ru.studymushrooms.ui.auth.LoginFragment"
-        android:label="@string/login_capital"
-        tools:layout="@layout/login_fragment" />
     <fragment
         android:id="@+id/navigation_notes"
         android:name="ru.studymushrooms.ui.notes.NotesFragment"

@@ -163,7 +163,6 @@ class MapsFragment : Fragment() {
             if (ContextCompat.checkSelfPermission(requireContext(), permission)
                 != PackageManager.PERMISSION_GRANTED
             ) {
-                // Permission is not granted
                 permissionsToRequest.add(permission)
             }
         }
